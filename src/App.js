@@ -1,36 +1,15 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef } from 'react';
 import './App.css';
+import useMovement from './useMovement';
 
 export default function App() {
 
-  const [x, setX] = useState(0);
-  const [y, setY] = useState(0);
-  const [direction, setDirection] = useState('down')
   const canvasRef = useRef(null);
   const linkDownRef = useRef(null);
   const linkUpRef = useRef(null);
   const linkRightRef = useRef(null);
   const linkLeftRef = useRef(null);
-
-  const move = (dir) => {
-    setDirection(dir)
-    switch (dir) {
-      case 'up':
-        setY(y => y - 20);
-        break;
-      case 'left':
-        setX(x => x - 20);
-        break;
-      case 'right':
-        setX(x => x + 20);
-        break;
-      case 'down':
-        setY(y => y + 20);
-        break;
-      default:
-        return null;
-    }
-  }
+  const { x, y, direction, move } = useMovement();
 
   // set the height and width of canvas
   useEffect(() => {
@@ -54,28 +33,6 @@ export default function App() {
     context.drawImage(linkRef.current, x, y)
 
   }, [x, y, direction]);
-
-  // add event listener to listen keys
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      switch (e.keyCode) {
-        case 37:
-          return move('left');
-        case 38:
-          return move('up');
-        case 39:
-          return move('right');
-        case 40:
-          return move('down');
-        default:
-          return null;
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  });
 
   return (
     <div className="app">
